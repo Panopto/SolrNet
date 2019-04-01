@@ -154,11 +154,21 @@ namespace SolrNet.Tests
         }
 
         [Fact]
-        public void Serialize_EmptyList()
+        public void Serialize_ListOfNulls()
         {
             var serializer = GetSerializer();
             var docNode = serializer.Serialize(new Dictionary<string, object> {
                 {"one", new List<string> {null, null}}
+            }, null);
+            Assert.Equal(0, docNode.Nodes().Count());
+        }
+
+        [Fact]
+        public void Serialize_EmptyList()
+        {
+            var serializer = GetSerializer();
+            var docNode = serializer.Serialize(new Dictionary<string, object> {
+                {"one", new List<string>()}
             }, null);
             Assert.Equal(0, docNode.Nodes().Count());
         }
@@ -171,6 +181,17 @@ namespace SolrNet.Tests
                 {"one", new KeyValuePair<string, string>("a", "b")}
             }, null);
             AssertSerializedField(xml, "[a, b]");
+        }
+
+        [Fact]
+        public void Serialize_NullValue()
+        {
+            var serializer = GetSerializer();
+            var xml = serializer.Serialize(new Dictionary<string, object>
+            {
+                {"one", null}
+            }, null);
+            Assert.Equal(0, xml.Nodes().Count());
         }
 
         private SolrDictionarySerializer GetSerializer()

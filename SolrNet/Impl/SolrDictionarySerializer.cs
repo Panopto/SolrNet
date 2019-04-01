@@ -40,11 +40,13 @@ namespace SolrNet.Impl {
             }
             foreach (var kv in doc) {
                 var nodes = serializer.Serialize(kv.Value);
-                foreach (var n in nodes) {
-                    var value = SolrDocumentSerializer<object>.RemoveControlCharacters(n.FieldValue);
-                    if (value != null) {
-                        var fieldNode = new XElement("field", new XAttribute("name", kv.Key), value);
-                        docNode.Add(fieldNode);
+                if (nodes != null) {
+                    foreach (var n in nodes) {
+                        var value = SolrDocumentSerializer<object>.RemoveControlCharacters(n.FieldValue);
+                        if (value != null) {
+                            var fieldNode = new XElement("field", new XAttribute("name", kv.Key), value);
+                            docNode.Add(fieldNode);
+                        }
                     }
                 }
             }
